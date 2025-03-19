@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+spec:
+  selector:
+    app: jenkins
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30080  # You can specify the NodePort for HTTP access (adjust as necessary)
+    - protocol: TCP
+      port: 50000
+      targetPort: 50000
+      nodePort: 30001  # You can specify the NodePort for Jenkins agent communication (adjust as necessary)
+  type: NodePort  # This will expose the service via a node port
