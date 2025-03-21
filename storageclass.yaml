@@ -1,11 +1,11 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: jenkins-storage
-provisioner: kubernetes.io/aws-ebs  # Ensure this matches your cloud provider
+  name: prometheus-storage  # This is the name used in the PVC
+provisioner: kubernetes.io/aws-ebs  # This is for AWS EBS; adjust based on your provider (e.g., gcePersistentDisk for GCP)
 parameters:
-  type: gp2  # Or the correct volume type based on your cloud provider (AWS, GCP, etc.)
-reclaimPolicy: Retain
+  type: gp2  # Adjust based on your cloud provider's storage options
+reclaimPolicy: Retain  # Retain the volume even after the PVC is deleted (use Delete if you want the volume to be deleted with PVC)
 volumeBindingMode: Immediate
 allowedTopologies:
   - matchLabelExpressions:
