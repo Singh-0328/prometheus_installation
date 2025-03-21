@@ -14,20 +14,41 @@ spec:
       labels:
         app: jenkins
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.ebs.csi.aws.com/zone
+                    operator: In
+                    values:
+                      - ap-south-1a
+                  - key: topology.kubernetes.io/region
+                    operator: In
+                    values:
+                      - ap-south-1
+      initContainers:
+        - name: init-permissions
+          image: busybox
+          command: ['sh', '-c', 'chown -R 1000:1000 /var/jenkins_home']
+          volumeMounts:
+            - mountPath: /var/jenkins_home
+              name: jenkins-home                  
       containers:
-      - name: jenkins
-        image: jenkins/jenkins:lts
-        imagePullPolicy: Always
-        env:
-        - name: JAVA_OPTS
-          value: "-Djenkins.install.runSetupWizard=false"
-        ports:
-        - containerPort: 8080
-        - containerPort: 50000
-        volumeMounts:
-        - name: jenkins-home
-          mountPath: /var/jenkins_home
+        - name: jenkins
+          image: jenkins/jenkins:lts
+          imagePullPolicy: Always
+          env:
+            - name: JAVA_OPTS
+              value: "-Djenkins.install.runSetupWizard=false"
+          ports:
+            - containerPort: 8080
+            - containerPort: 50000
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
       volumes:
-      - name: jenkins-home
-        persistentVolumeClaim:
-          claimName: jenkins-pvc
+        - name: jenkins-home
+          persistentVolumeClaim:
+            claimName: jenkins-pvc
+
