@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
+<<<<<<< HEAD
   name: jenkins
 spec:
   selector:
@@ -17,4 +18,22 @@ spec:
       targetPort: 50000
       nodePort: 30001  # You can specify the NodePort for Jenkins agent communication
   type: NodePort  # This will expose the service via a node port
+=======
+  name: prometheus
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9090  # Default Prometheus HTTP port
+      targetPort: 9090
+      nodePort: 31090  # NodePort for Prometheus HTTP access
+    - name: rpc
+      protocol: TCP
+      port: 9093  # Default Prometheus alertmanager port
+      targetPort: 9093
+      nodePort: 31093  # NodePort for Prometheus alertmanager communication
+  type: NodePort  # This exposes the service on each node's IP at a static port
+>>>>>>> update
 

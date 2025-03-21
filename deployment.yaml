@@ -1,18 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+<<<<<<< HEAD
   name: jenkins
   labels:
     app: jenkins
+=======
+  name: prometheus
+  labels:
+    app: prometheus
+>>>>>>> update
 spec:
   replicas: 1
   selector:
     matchLabels:
+<<<<<<< HEAD
       app: jenkins
   template:
     metadata:
       labels:
         app: jenkins
+=======
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+>>>>>>> update
     spec:
       affinity:
         nodeAffinity:
@@ -30,6 +44,7 @@ spec:
       initContainers:
         - name: init-permissions
           image: busybox
+<<<<<<< HEAD
           command: ['sh', '-c', 'chown -R 1000:1000 /var/jenkins_home']
           volumeMounts:
             - mountPath: /var/jenkins_home
@@ -51,4 +66,27 @@ spec:
         - name: jenkins-home
           persistentVolumeClaim:
             claimName: jenkins-pvc
+=======
+          command: ['sh', '-c', 'chown -R 65534:65534 /prometheus'] # Ensure Prometheus has ownership of the volume
+          volumeMounts:
+            - mountPath: /prometheus      # Mount path of the volume inside the init container
+              name: prometheus-home      # Name of the Persistent Volume for Prometheus data
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.37.0 # Use the correct Prometheus image version
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9090  # Prometheus Web UI port
+          volumeMounts:
+            - name: prometheus-home
+              mountPath: /prometheus  # Mount path for the Prometheus data inside the container
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"  # Path to the Prometheus config file (ensure the file is mounted)
+            - "--storage.tsdb.path=/prometheus"  # Directory where Prometheus stores its time-series data
+            - "--web.listen-address=0.0.0.0:9090"  # Web UI listen address
+      volumes:
+        - name: prometheus-home
+          persistentVolumeClaim:
+            claimName: prometheus-pvc  # Ensure that the PVC name is correct and exists
+>>>>>>> update
 

@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+<<<<<<< HEAD
   name: jenkins-pvc
 spec:
   accessModes:
@@ -9,3 +10,14 @@ spec:
     requests:
       storage: 10Gi  # Adjust the storage size as needed
   storageClassName: jenkins-storage
+=======
+  name: prometheus-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce  # Prometheus typically requires ReadWriteOnce access mode
+  resources:
+    requests:
+      storage: 10Gi  # Adjust this size based on your needs
+  storageClassName: prometheus-storage  # This now points to the custom storage class created for Prometheus
+
+>>>>>>> update
